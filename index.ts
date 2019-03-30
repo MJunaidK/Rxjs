@@ -51,7 +51,8 @@ allBooksObservable$.subscribe(book => console.log(book.title));
 
 ================================ */
 
-//
+/*
+// Creating Observables from Existing Data
 
 import {Observable, of, from, fromEvent, concat} from 'rxjs';
 import { allReaders, allBooks } from './data';
@@ -67,4 +68,25 @@ let source2$ = from(allBooks);
 
 //combine observables
 concat(source1$,source2$).subscribe(value => console.log(value));
+
+======================================= */
+// Creating Observables to Handle Events
+
+import {Observable, of, from, fromEvent, concat} from 'rxjs';
+import { allReaders } from './data';
+
+let button = document.getElementById('readersButton');
+
+// value produced by the observable will be javascript event object
+fromEvent(button, 'click')
+        .subscribe( event => {
+            console.log(event);
+
+            let readerDiv = document.getElementById('readers');
+            
+            for(let reader of allReaders){
+                readerDiv.innerHTML += reader.name + '<br>';
+            }
+
+        });
 
