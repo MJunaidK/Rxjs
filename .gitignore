@@ -4998,3 +4998,5 @@ node_modules/date-fns/get_minutes/package.json
 node_modules/date-fns/get_month/index.js
 node_modules/date-fns/get_month/index.js.flow
 node_modules/date-fns/get_month/package.json
+dist/bundle.js
+dist/index.html
