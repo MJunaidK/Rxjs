@@ -13,6 +13,7 @@
     "express": "~4.16.2",
     "jade": "~1.11.0",
     "morgan": ">=1.9.1",
+    "rxjs": "^6.4.0",
     "serve-favicon": "~2.4.5"
   },
   "devDependencies": {
