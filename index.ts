@@ -1,3 +1,6 @@
+/*
+// Instantiating a new Observable
+
 import {Observable} from 'rxjs';
 import {allBooks} from './data';
 
@@ -44,3 +47,24 @@ let allBooksObservable$ = Observable.create(
 //subscribe to observable and pass the object that will be the subscriber 
 
 allBooksObservable$.subscribe(book => console.log(book.title));
+
+
+================================ */
+
+//
+
+import {Observable, of, from, fromEvent, concat} from 'rxjs';
+import { allReaders, allBooks } from './data';
+//of and from used when you want to create observable from some data you alresy have
+
+let source1$ = of('hello', 10, true, allReaders[0].name);
+
+//source1$.subscribe(value => console.log(value));
+
+//Similar to of but instead of passing a bunch of individual values you pass single object that encapsulates a group of values
+let source2$ = from(allBooks);
+//source2$.subscribe(book => console.log(book.title))
+
+//combine observables
+concat(source1$,source2$).subscribe(value => console.log(value));
+
