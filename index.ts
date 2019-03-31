@@ -181,6 +181,8 @@ let myObserver1 = {
 numberObservables$.subscribe(myObserver1);
 
 ================================================== */
+/*
+
 // Creating and Using Observers
 
 import {from} from 'rxjs';
@@ -200,3 +202,32 @@ books$.subscribe(
     err => console.log(`Error: ${err}`),
     () => console.log('All done producing values')
 );
+
+==================================================== */
+
+
+// Multiple Observers Executing a Single Observable
+
+import {Observable} from 'rxjs';
+
+let currentTime$ = new Observable( subscriber  => {
+    const timeString = new Date().toLocaleTimeString();
+    subscriber.next(timeString);
+    subscriber.complete();
+});
+
+currentTime$.subscribe(
+    currentTime => console.log(` Observer 1: ${currentTime}`)
+);
+
+setTimeout(() => {
+    currentTime$.subscribe(
+        currentTime => console.log(` Observer 2: ${currentTime}`)
+    ); 
+  }, 1000);
+
+  setTimeout(() => {
+    currentTime$.subscribe(
+        currentTime => console.log(` Observer 3: ${currentTime}`)
+    ); 
+  }, 2000);
