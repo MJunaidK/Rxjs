@@ -343,6 +343,7 @@ setTimeout(() => {
         )
 
 ============================================== */
+/*
 
 // Handling errors
 
@@ -364,4 +365,37 @@ import {ajax} from 'rxjs/ajax';
          finalValue => console.log(` Value: ${finalValue.title}`),
          error => console.log(`Error: ${error}`)
      );
+
+======================================== */
+
+// Controlling the Number of Values Produced
+
+import {interval, fromEvent, Observable, Subscriber} from 'rxjs';
+import {take, takeUntil} from 'rxjs/operators';
+
+let timesDiv = document.getElementById('times');
+let button = document.getElementById('timerButton');
+
+let timer$ = new Observable(subscriber => {
+   let i=0;
+   let intervalID = setInterval(() => {
+      subscriber.next(i++);
+   }, 1000);
+
+   return () => {
+       console.log('Executing teardown code.');
+       clearInterval(intervalID);
+   }
+});
+
+let cancelTimer$=fromEvent(button, 'click');
+
+timer$.pipe(
+    take(2)
+   // takeUntil(cancelTimer$)
+).subscribe(
+    value => timesDiv.innerHTML += `${new Date().toLocaleTimeString()} (${value}) <br>`,
+    null,
+    () => console.log('All Done')
+);
 
