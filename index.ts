@@ -620,6 +620,7 @@ setTimeout(() => {
 
 ============================================= */
 
+/*
 //Using Multicast Operators Instead of Subjects
 
 // Controlling Multicasted Output with Specialized Operators
@@ -670,3 +671,26 @@ setTimeout(() => {
 // multicast operators return a ConnectableObservable. They are special type of Observable that won,t start executing  until you call there connect method.
 
 source1$.connect();
+
+============================================== */
+
+// Using Schedulers with Observable Creation Functions
+
+import {asyncScheduler, asapScheduler, queueScheduler,merge,of} from 'rxjs';
+
+console.log('Start script.');
+
+//Observable producing a string value
+
+let queue$ = of('QueueScheduler (synchronous)',queueScheduler);
+
+let asap$ = of('AsapScheduler (synchronous)',asapScheduler);
+
+let async$ = of('AsyncScheduler (synchronous)',asyncScheduler);
+
+merge(async$, asap$, queue$)
+    .subscribe(
+        value  => console.log(value);
+    )
+
+console.log('End script.');
