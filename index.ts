@@ -325,6 +325,8 @@ setTimeout(() => {
 
    ================================================== */
 
+   /*
+
    // Using Operators
 
    import {mergeMap, filter, tap} from 'rxjs/operators';
@@ -340,5 +342,26 @@ setTimeout(() => {
             finalValue => console.log(finalValue)
         )
 
+============================================== */
 
+// Handling errors
+
+import {of, throwError} from 'rxjs';
+import {mergeMap, filter, tap, catchError} from 'rxjs/operators';
+import {ajax} from 'rxjs/ajax'; 
+
+ ajax('/api/errors/500')
+     .pipe(
+         mergeMap(ajaxResponse => ajaxResponse.response),
+         filter(book => book.publicationYear < 1950),
+         tap(oldBook => console.log(`Title : ${oldBook.title}`)),
+         //catchError(error => of({title: 'Corduroy', author: 'Don freeman'})) //swallow the error and return a new observable
+         //catchError((err, obsrvthatproduceError) => obsrvthatproduceError) // Returning the obersevable that produce the erro as an atempt to retry same code once again
+         //catchError(err => throw `Something bad happened - ${err.message}`) // throw error
+         catchError(err => return throwError(err.message)) // Instead of using JS throw we use here Rxjs throwError. ThrowError is a function that will return an observable thatimmediately produces an error.So I need to return an error and it must be wrapped in Observable throwError is to be used.
+     )
+     .subscribe(
+         finalValue => console.log(` Value: ${finalValue.title}`),
+         error => console.log(`Error: ${error}`)
+     );
 
