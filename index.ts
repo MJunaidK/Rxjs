@@ -622,15 +622,22 @@ setTimeout(() => {
 
 //Using Multicast Operators Instead of Subjects
 
+// Controlling Multicasted Output with Specialized Operators
+
 import {interval,Subject} from 'rxjs';
-import {take, multicast, refCount, publish, share} from 'rxjs/operators';
+import {take, multicast, refCount, publish, share,publishLast, publishBehavior, publishReplay} from 'rxjs/operators';
 
 let source1$ = interval(1000).pipe(
     take(4),
     //multicast(new Subject()) ,
    // publish() // create a subject internally
     //refCount() // Executin begins when the the first observer subscribe
-    share()
+    //share()
+   // publishLast(),
+    //publishBehavior(42),
+    publishReplay()
+
+
 )
 
 source1$.subscribe(
