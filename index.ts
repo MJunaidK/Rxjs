@@ -118,6 +118,7 @@ fromEvent(button, 'click') // first observable will produce click events from th
 
 =========================================== */
 
+/*
 //Module 4
 // Understanding Observers
 
@@ -178,3 +179,24 @@ let myObserver1 = {
 }
 
 numberObservables$.subscribe(myObserver1);
+
+================================================== */
+// Creating and Using Observers
+
+import {from} from 'rxjs';
+import {allBooks} from './data';
+
+let books$ = from(allBooks);
+
+
+// let bookObserver = {
+//     next: book => console.log(`Value produced: ${book.title}`),
+//     error: err => console.log(`Error: ${err}`),
+//     complete: () => console.log('All done producing values')
+// };
+
+books$.subscribe(
+    book => console.log(`Value produced: ${book.title}`),
+    err => console.log(`Error: ${err}`),
+    () => console.log('All done producing values')
+);
