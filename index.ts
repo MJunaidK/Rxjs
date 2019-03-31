@@ -484,6 +484,8 @@ function grabAndLogClassics(year, log){ // Operator accepting config Parameters
 
 ==================================================== */
 
+/*
+
 //Creating New Operators from Existing Operators
 
 import {map,filter,mergeMap,tap} from 'rxjs/operators';
@@ -514,3 +516,35 @@ ajax('/api/books')
 .subscribe(
     finalValue => console.log(finalValue)
 )
+
+============================================================ */
+
+
+// Producing Values with Subjects
+
+import {Subject, Observable} from 'rxjs';
+
+let subject$ = new Subject();
+
+// Caling subscribe twice on the subject, both observers are nw been added to the array of observers.
+
+
+subject$.subscribe(
+    value => console.log(`Observer 1: ${value}`)
+);
+
+subject$.subscribe(
+    value => console.log(`Observer 2: ${value}`)
+);
+
+// Subject produce values when next value is called
+
+subject$.next('Hello !');
+
+let source$ = new Observable( subscriber => {
+    subscriber.next('Greeting!');
+})
+
+// passing Subject as an Observer
+// Each of the subject's observers recieved and logged the value originally produce the source observable.
+source$.subscribe(subject$);
