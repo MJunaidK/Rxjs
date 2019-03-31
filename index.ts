@@ -674,6 +674,8 @@ source1$.connect();
 
 ============================================== */
 
+/*
+
 // Using Schedulers with Observable Creation Functions
 
 import {asyncScheduler, asapScheduler, queueScheduler,merge,of} from 'rxjs';
@@ -694,3 +696,22 @@ merge(async$, asap$, queue$)
     )
 
 console.log('End script.');
+
+========================================================= */
+
+
+// Applying a Scheduler with the observeOn Operator
+
+import {observeOn,tap} from 'rxjs/operators';
+import {from, queueScheduler, asyncScheduler} from 'rxjs';
+
+console.log('Start script.');
+
+from([1,2,3,4], queueScheduler).pipe(
+    tap(value => console.log(`Value: ${value}`)),
+    observeOn(asyncScheduler),
+    tap(value => console.log(`Doubled value: ${value*2}`))
+).subscribe()
+
+console.log('End script.');
+
