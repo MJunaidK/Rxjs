@@ -368,6 +368,7 @@ import {ajax} from 'rxjs/ajax';
 
 ======================================== */
 
+/*
 // Controlling the Number of Values Produced
 
 import {interval, fromEvent, Observable, Subscriber} from 'rxjs';
@@ -399,3 +400,39 @@ timer$.pipe(
     () => console.log('All Done')
 );
 
+======================================== */
+
+// Operator Structure
+
+function myOperator(config1, config2){ //Operator take config arameters 
+    return function(source$){  //it should return a function passing observable as a parameter
+        return newObservable$; // function should itself return a new observable
+    }
+}
+
+
+// manually applying an Operator 
+
+import {of} from 'rxjs';
+
+let source$ = of(1,2,3,4,5);
+let doubler = map(value => value * 2); // map operator taking config parameters
+let doubled$ = doubler(source$); // taking oservable and returning observable
+
+doubled$.subscribe(
+    value => console.log(value)
+);
+
+// Creating an Operator 
+
+let source1$ = of(1,2,3,4,5);
+
+function doubleOperator(){
+    return map(value => value * 2);
+}
+
+source1$.pipe(
+ doubleOperator()
+).subscribe(
+    doubledValue => console.log(doubledValue)
+)
