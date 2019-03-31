@@ -204,7 +204,7 @@ books$.subscribe(
 );
 
 ==================================================== */
-
+/*
 
 // Multiple Observers Executing a Single Observable
 
@@ -231,3 +231,50 @@ setTimeout(() => {
         currentTime => console.log(` Observer 3: ${currentTime}`)
     ); 
   }, 2000);
+
+  ======================================================= */
+
+  // Cancelling Observable Execution with a Subscription
+
+  import {interval, fromEvent, Observable, Subscriber} from 'rxjs';
+  let timesDiv = document.getElementById('times');
+  let button = document.getElementById('timerButton');
+
+  // interval is a built in function and will return an observable that produces atream of integers
+
+ // let timer$ = interval(1000);
+
+
+ // creating observable like below will return a function that will take care of cleaning and releasing resource once it quit executing.
+ let timer$ = new Observable(subscriber => {
+     let i=0;
+     let intervalID = setInterval(() => {
+        subscriber.next(i++);
+     }, 1000);
+
+     return () => {
+         console.log('Executing teardown code.');
+         clearInterval(intervalID);
+     }
+ });
+
+  // subscribe method returns a Subscription object
+
+  let timerSubscription = timer$.subscribe(
+      value => timesDiv.innerHTML += `${new Date().toLocaleTimeString()} (${value}) <br>`,
+      null,
+      () => console.log('All Done')
+  );
+
+  fromEvent(button, 'click')
+    .subscribe(
+        event => timerSubscription.unsubscribe()
+    );
+
+   // Add one subscription to another and cancel them both with single call to unsubscribe
+   
+   let timerConsoleSubscription = timer$.subscribe(
+       value => console.log(`${new Date().toLocaleTimeString()} (${value})`)
+   );
+
+   timerSubscription.add(timerConsoleSubscription);
