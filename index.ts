@@ -70,6 +70,8 @@ let source2$ = from(allBooks);
 concat(source1$,source2$).subscribe(value => console.log(value));
 
 ======================================= */
+
+/*
 // Creating Observables to Handle Events
 
 import {Observable, of, from, fromEvent, concat} from 'rxjs';
@@ -89,4 +91,28 @@ fromEvent(button, 'click')
             }
 
         });
+======================================== */
+
+//Making AJAX Requests with RxJS
+
+import {ajax} from 'rxjs/ajax';
+import {fromEvent} from 'rxjs';
+
+let button = document.getElementById('readersButton');
+fromEvent(button, 'click') // first observable will produce click events from the button
+        .subscribe( event => {
+            // If you like recieving the data wrapped in observables you can use ajax functions 
+            // ajax function return observables
+            ajax('/api/readers')        // Second observable will produce HTTPResponse
+                .subscribe(ajaxResponse => {
+                    console.log(ajaxResponse);
+                    let readers = ajaxResponse.response;
+                    let readerDiv = document.getElementById('readers');
+            
+                 for(let reader of readers){
+                     readerDiv.innerHTML += reader.name + '<br>';
+                    }
+            })
+        });
+
 
