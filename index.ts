@@ -585,6 +585,8 @@ setTimeout(() => {
 }, 2000);
 
 ============================================== */
+/*
+
 // Conevrting cold to hot using subject
 // when source produces a value, it will be pushed to subject, which willpush it out to all of the observers simultaneously.
 
@@ -616,3 +618,48 @@ setTimeout(() => {
     );
 }, 2000);
 
+============================================= */
+
+//Using Multicast Operators Instead of Subjects
+
+import {interval,Subject} from 'rxjs';
+import {take, multicast, refCount, publish, share} from 'rxjs/operators';
+
+let source1$ = interval(1000).pipe(
+    take(4),
+    //multicast(new Subject()) ,
+   // publish() // create a subject internally
+    //refCount() // Executin begins when the the first observer subscribe
+    share()
+)
+
+source1$.subscribe(
+    value => console.log(`Observer 1: ${value}`)
+);
+
+
+setTimeout(() => {
+    source1$.subscribe(
+        value => console.log(`Observer 2: ${value}`)
+    );
+}, 1000);
+
+
+setTimeout(() => {
+    source1$.subscribe(
+        value => console.log(`Observer 3: ${value}`)
+    );
+}, 2000);
+
+
+setTimeout(() => {
+    source1$.subscribe(
+        value => console.log(`Observer 4: ${value}`),
+        null,
+        () => console.log('Observer 4 complete')
+    );
+}, 4500);
+
+// multicast operators return a ConnectableObservable. They are special type of Observable that won,t start executing  until you call there connect method.
+
+source1$.connect();
