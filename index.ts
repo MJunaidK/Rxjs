@@ -282,6 +282,7 @@ setTimeout(() => {
 
    ================================================== */
 
+   /*
     // Applying Operators
 
 
@@ -321,3 +322,23 @@ setTimeout(() => {
    .subscribe(
        finalValue => console.log(finalValue)
    )
+
+   ================================================== */
+
+   // Using Operators
+
+   import {mergeMap, filter, tap} from 'rxjs/operators';
+   import {ajax} from 'rxjs/ajax'; 
+
+    ajax('/api/books')
+        .pipe(
+            mergeMap(ajaxResponse => ajaxResponse.response),
+            filter(book => book.publicationYear < 1950),
+            tap(oldBook => console.log(`Title : ${oldBook.title}`))
+        )
+        .subscribe(
+            finalValue => console.log(finalValue)
+        )
+
+
+
