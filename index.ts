@@ -93,6 +93,7 @@ fromEvent(button, 'click')
         });
 ======================================== */
 
+/*
 //Making AJAX Requests with RxJS
 
 import {ajax} from 'rxjs/ajax';
@@ -115,4 +116,65 @@ fromEvent(button, 'click') // first observable will produce click events from th
             })
         });
 
+=========================================== */
 
+//Module 4
+// Understanding Observers
+
+
+// Observable implements observer interface
+// One way to create observer is to create an object literal that implements the methods on the observer interface.
+
+import {Observable,of} from 'rxjs';
+
+// Observer Object
+let myObserver = {
+    next: value => console.log(`Value produced: ${value}`),
+    error: err => console.log(`Error: ${err}`),
+    complete: () => console.log('All done producing values')
+};
+
+let sourceObservable$ = of(1,3,5);
+sourceObservable$.subscribe(myObserver); //passing object literal with three functions to subscribe method
+
+// You can also pass the callback functions directly to subscribe
+// subscribing with callbacks, no need to name these and an observer is create behind the scene for you.
+
+let sourceObservable1$ = of(2,4,6);
+sourceObservable1$.subscribe(
+    value => console.log(`Value produced: ${value}`),
+    err => console.log(`Error: ${err}`),
+    () => console.log('All done producing values')
+);
+
+// Observers vs Subscribers
+//public abstract class Subscriber<T> implements Observer<T>, Subscription
+//So a Subscriber is an implementation of the Observer, with additional semantics on subscription (it's more about un-subscription)
+
+let myNumbers = [7,8,9];
+
+// Subscriber push values to the observers by calling next, error, complete
+// Here observer produce values for an observable
+let numberObservables$ = new Observable( susbscriber => {
+
+    if(myNumbers.length === 0) {
+        susbscriber.error('No values');
+    }
+
+    for(let num of myNumbers){
+        susbscriber.next(num);
+    }
+
+    susbscriber.complete();    
+
+});
+
+// When you subscribe to the observable, observer used to recieve value
+
+let myObserver1 = {
+    next: value => console.log(`Value produced: ${value}`),
+    error: err => console.log(`Error: ${err}`),
+    complete: () => console.log('All done producing values')
+}
+
+numberObservables$.subscribe(myObserver1);
