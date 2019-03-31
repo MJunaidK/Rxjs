@@ -402,6 +402,8 @@ timer$.pipe(
 
 ======================================== */
 
+/*
+
 // Operator Structure
 
 function myOperator(config1, config2){ //Operator take config arameters 
@@ -436,3 +438,44 @@ source1$.pipe(
 ).subscribe(
     doubledValue => console.log(doubledValue)
 )
+======================================================== */
+// Creating New Operators with the Observable Constructor
+
+import {Observable} from 'rxjs';
+import {mergeMap, filter, tap} from 'rxjs/operators';
+import {ajax} from 'rxjs/ajax'; 
+
+
+function grabAndLogClassics(year, log){ // Operator accepting config Parameters
+    
+    // function should be passed a source observable and return a new observable
+
+    return source$ => {
+        return new Observable(subscriber => {
+            source$.subscribe(     // As my Operator needs access to te value being produced by the source observables we should subscribe to source observable.
+                book => {          // We capture the value being produced by the source observale in a paraneter called book.
+                    if(book.publicationYear < year){ // If satisfies we have to include this in a new observable.
+                        subscriber.next(book);
+                        if(log){
+                            console.log(`Classic: ${book.title}`);
+                        }
+                    }
+                }
+            ),
+            err => subscriber.error(err),
+            () => subscriber.complete()
+        })
+    }
+}
+
+    ajax('/api/books')
+        .pipe(
+             mergeMap(ajaxResponse => ajaxResponse.response),
+            // filter(book => book.publicationYear < 1950),
+            //tap(oldBook => console.log(`Title : ${oldBook.title}`))
+            grabAndLogClassics(1950,true),
+        )
+        .subscribe(
+            finalValue => console.log(finalValue)
+        )
+
