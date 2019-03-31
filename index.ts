@@ -519,6 +519,7 @@ ajax('/api/books')
 
 ============================================================ */
 
+/*
 
 // Producing Values with Subjects
 
@@ -548,3 +549,70 @@ let source$ = new Observable( subscriber => {
 // passing Subject as an Observer
 // Each of the subject's observers recieved and logged the value originally produce the source observable.
 source$.subscribe(subject$);
+
+==================================================== */
+
+/*
+
+// Using a Subject to Convert an Observable from Cold to Hot
+
+// Without subject
+
+import {interval,Subject} from 'rxjs';
+import {take} from 'rxjs/operators';
+
+// using interval whic is a cold observable
+let source$ = interval(1000).pipe(
+    take(4)
+)
+
+source$.subscribe(
+    value => console.log(`Observer 1: ${value}`)
+);
+
+
+setTimeout(() => {
+    source$.subscribe(
+        value => console.log(`Observer 2: ${value}`)
+    );
+}, 1000);
+
+
+setTimeout(() => {
+    source$.subscribe(
+        value => console.log(`Observer 3: ${value}`)
+    );
+}, 2000);
+
+============================================== */
+// Conevrting cold to hot using subject
+// when source produces a value, it will be pushed to subject, which willpush it out to all of the observers simultaneously.
+
+import {interval,Subject} from 'rxjs';
+import {take} from 'rxjs/operators';
+
+let source1$ = interval(1000).pipe(
+    take(4)
+)
+
+let subject$ = new Subject();
+source1$.subscribe(subject$);
+
+subject$.subscribe(
+    value => console.log(`Observer 1: ${value}`)
+);
+
+
+setTimeout(() => {
+    subject$.subscribe(
+        value => console.log(`Observer 2: ${value}`)
+    );
+}, 1000);
+
+
+setTimeout(() => {
+    subject$.subscribe(
+        value => console.log(`Observer 3: ${value}`)
+    );
+}, 2000);
+
