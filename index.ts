@@ -439,6 +439,8 @@ source1$.pipe(
     doubledValue => console.log(doubledValue)
 )
 ======================================================== */
+/*
+
 // Creating New Operators with the Observable Constructor
 
 import {Observable} from 'rxjs';
@@ -468,6 +470,7 @@ function grabAndLogClassics(year, log){ // Operator accepting config Parameters
     }
 }
 
+
     ajax('/api/books')
         .pipe(
              mergeMap(ajaxResponse => ajaxResponse.response),
@@ -479,3 +482,35 @@ function grabAndLogClassics(year, log){ // Operator accepting config Parameters
             finalValue => console.log(finalValue)
         )
 
+==================================================== */
+
+//Creating New Operators from Existing Operators
+
+import {map,filter,mergeMap,tap} from 'rxjs/operators';
+import {ajax} from 'rxjs/ajax'; 
+
+function grabClassics(year){
+
+    // Opeartor should return a function that takes an observable and return an observable
+
+    return filter(book => book.publicationYear < year)
+
+}
+
+function grabAndLogClassicsWithPipe(year, log){
+    return source$ => source$.pipe()
+        filter(book => book.publicationYear < year),
+        tap(classicBook => log ? console.log(`Title: ${classicBook.title}`): null)
+}
+
+
+ajax('/api/books')
+.pipe(
+     mergeMap(ajaxResponse => ajaxResponse.response),
+    // filter(book => book.publicationYear < 1950),
+    //tap(oldBook => console.log(`Title : ${oldBook.title}`))
+    grabClassics(1950),
+)
+.subscribe(
+    finalValue => console.log(finalValue)
+)
