@@ -234,6 +234,7 @@ setTimeout(() => {
 
   ======================================================= */
 
+ /* 
   // Cancelling Observable Execution with a Subscription
 
   import {interval, fromEvent, Observable, Subscriber} from 'rxjs';
@@ -278,3 +279,45 @@ setTimeout(() => {
    );
 
    timerSubscription.add(timerConsoleSubscription);
+
+   ================================================== */
+
+    // Applying Operators
+
+
+    // Manually applying an Operator 
+
+    import {of} from 'rxjs';
+    import {map,filter} from 'rxjs/operator';
+
+
+    let source$ = of(1,2,3,4,5);
+
+    let doubler = map(value => value * 2);
+
+    let doubled$ =doubler(source$);
+
+    doubled$.subscribe(
+        value => console.log(value)
+    );
+
+
+    // Rxjs v5.5 and before operators exitsed as methods on observable so you use standard dot notations to chain on call to operators
+
+    source$
+        .map(value => value * 2)
+        .filter(mappedValue => mappedValue > 5)
+        .subscribe(
+            finalValue  => console.log(finalValue)
+        )
+    
+    
+   // Now you accomplish the same by passing the list of operators to a method named pipe
+
+   source$.pipe(
+       map(value => value * 2),
+       filter(mappedValue => mappedValue > 5)
+   )
+   .subscribe(
+       finalValue => console.log(finalValue)
+   )
